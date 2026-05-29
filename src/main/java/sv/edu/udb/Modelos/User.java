@@ -1,10 +1,16 @@
 package sv.edu.udb.Modelos;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table (name = "users")
 @Data
 public class User {
     @Id

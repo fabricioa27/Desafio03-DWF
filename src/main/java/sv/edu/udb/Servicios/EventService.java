@@ -1,20 +1,24 @@
 package sv.edu.udb.Servicios;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import sv.edu.udb.Modelos.Event;
 import sv.edu.udb.Repositorios.EventRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
-public class EventService{
+public class EventService {
     private final EventRepository eventRepository;
-
-    public EventService(EventRepository eventRepository) {
-        this.eventRepository = eventRepository;
-    }
 
     public List<Event> listarEventos() {
         return eventRepository.findAll();
+    }
+
+    public Page<Event> listarEventosPaginados(Pageable pageable) {
+        return eventRepository.findAll(pageable);
     }
 
     public Event obtenerPorId(Integer id) {
@@ -29,6 +33,7 @@ public class EventService{
     public Event actualizarEvento(Integer id, Event eventDetails) {
         Event event = obtenerPorId(id);
         event.setTitle(eventDetails.getTitle());
+        event.setDescription(eventDetails.getDescription());
         event.setEventDate(eventDetails.getEventDate());
         event.setVenue(eventDetails.getVenue());
         event.setCapacity(eventDetails.getCapacity());
@@ -37,6 +42,8 @@ public class EventService{
     }
 
     public void eliminarEvento(Integer id) {
-        eventRepository.deleteById(id);
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
+        eventRepository.delete(event);
     }
 }
